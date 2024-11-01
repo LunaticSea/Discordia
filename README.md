@@ -46,7 +46,7 @@ client:on('messageCreate', function(message)
 	end
 end)
 
-client:run('Bot INSERT_TOKEN_HERE')
+client:run('INSERT_TOKEN_HERE')
 ```
 
 ### Documentation

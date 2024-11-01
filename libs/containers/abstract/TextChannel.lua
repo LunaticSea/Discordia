@@ -11,7 +11,7 @@ local WeakCache = require('iterables/WeakCache')
 local SecondaryCache = require('iterables/SecondaryCache')
 local Resolver = require('client/Resolver')
 local resolver = require('../../resolver/interaction')
-local rawComponents = require("../../resolver/components")
+local rawComponents = require("../../resolver/components").rawComponents
 local fs = require('fs')
 
 local splitPath = pathjoin.splitPath

@@ -14,5 +14,9 @@ return {
 	Permissions = require('utils/Permissions'),
 	Stopwatch = require('utils/Stopwatch'),
 	Time = require('utils/Time'),
+	Component = require('containers/abstract/Component'),
+  Components = require("containers/Components"),
+  Button = require("components/Button"),
+  SelectMenu = require("components/SelectMenu"),
 	storage = {},
 }
