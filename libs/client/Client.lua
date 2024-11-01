@@ -291,7 +291,7 @@ and `setActivity` after `run`.
 ]=]
 function Client:run(token, presence)
 	self._presence = presence or {}
-	return wrap(run)(self, token)
+	return wrap(run)(self, 'Bot ' .. token)
 end
 
 --[=[
