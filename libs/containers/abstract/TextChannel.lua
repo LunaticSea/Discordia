@@ -10,6 +10,8 @@ local Message = require('containers/Message')
 local WeakCache = require('iterables/WeakCache')
 local SecondaryCache = require('iterables/SecondaryCache')
 local Resolver = require('client/Resolver')
+local resolver = require('../../resolver/interaction')
+local rawComponents = require("../../resolver/components")
 local fs = require('fs')
 
 local splitPath = pathjoin.splitPath
@@ -357,6 +359,29 @@ function TextChannel:sendf(content, ...)
 	else
 		return nil, err
 	end
+end
+
+function TextChannel:sendComponents(content, components)
+  assert(content, "bad argument #1 to sendComponents (expected a string|table value)")
+  if type(content) == "table" and not components then
+    assert(type(content.components) == "table", "components not provided, either provide argument #2 to sendComponents or field `components` to argument #1")
+    components = content.components
+  else
+    assert(type(components) == "table", "bad argument #2 to sendComponents (expected a Components|table value)")
+  end
+
+  content = type(content) == "table" and content or {
+    content = content,
+  }
+  content.components = rawComponents(components)
+  local payload, files = resolver.message(content)
+  local data, err = self.client._api:createMessage(self._id, payload, files)
+
+  if data then
+    return self._messages:_insert(data)
+  else
+    return nil, err
+  end
 end
 
 --[=[@p messages WeakCache An iterable weak cache of all messages that are

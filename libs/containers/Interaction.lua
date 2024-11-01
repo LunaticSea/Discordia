@@ -1,9 +1,9 @@
-local enums = require("../enums")
-local resolver = require("../resolver")
+local enums = require("enums")
+local resolver = require("../resolver/interaction")
 local bit = require("bit")
 
 local bor = bit.bor
-local class = require('../class')
+local class = require('class')
 local intrType = enums.interactionType
 local Snowflake = require('./abstract/Snowflake')
 local messageFlag = enums.messageFlag

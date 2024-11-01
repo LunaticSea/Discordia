@@ -12,6 +12,7 @@ local ArrayIterable = require('iterables/ArrayIterable')
 local Snowflake = require('containers/abstract/Snowflake')
 local Reaction = require('containers/Reaction')
 local Resolver = require('client/Resolver')
+local rawComponents = require('../resolver/components').rawComponents
 
 local insert = table.insert
 local null = json.null
@@ -261,15 +262,17 @@ must be authored by the current user. (ie: you cannot change the embed of messag
 sent by other users).
 ]=]
 function Message:update(data)
-	return self:_modify({
-		content = data.content or null,
-		embed = data.embed or null,
-		embeds = data.embeds or null,
-		allowed_mentions = {
-			parse = {'users', 'roles', 'everyone'},
-			replied_user = not not self._reply_target,
-		},
-	})
+  local components = data.components and rawComponents(data.components)
+  return self:_modify{
+    components = components or {},
+    content = data.content or null,
+    embed = data.embed or null,
+    embeds = data.embeds or null,
+    allowed_mentions = {
+      parse = {'users', 'roles', 'everyone'},
+      replied_user = not not self._reply_target,
+    },
+  }
 end
 
 --[=[
@@ -391,6 +394,64 @@ end
 ]=]
 function Message:reply(content)
 	return self._parent:send(content)
+end
+
+
+---Sets the message's components.
+---If `components` is false or nil, the message's components are removed.
+---
+---Returns `true` on success, otherwise `nil, err`.
+---@param components? Components-Resolvable|boolean
+---@return boolean
+function Message:setComponents(components)
+  components = components and rawComponents(components) or {}
+  return self:_modify{components = components}
+end
+
+---<!ignore>
+---Similar to `Message:update(data)` except `data` is optional and mainly used to modify `components` field of a message.
+---If `components` is false/nil, all components on that message will be removed.
+---`data` may optionally be supplied to override other fields such as `content`, `embed`, etc.
+---
+---Returns the modified version of the Message.
+---@param components? Components-Resolvable|boolean
+---@param data? table
+---@return Message
+---@deprecated Use `Message:update()` instead.
+function Message:updateComponents(components, data)
+  self.client._deprecated("Message", "updateComponents", "update")
+  data = type(data) == "table" and data or {}
+  if not components then
+    data.components = {}
+    return self:_modify(data)
+  end
+  assert(components == true or type(components) == "table", "bad argument #1 to updateComponents (expected a Components|falsy value)")
+  data.components = rawComponents(components)
+  return self:_modify(data)
+end
+
+---Equivalent to `Message.channel:sendComponents(content, components)`.
+---@param content string|table
+---@param components? Components-Resolvable|table
+---@return Message
+---<!tag:http>
+function Message:replyComponents(content, components)
+  return self._parent:sendComponents(content, components)
+end
+
+---Equivalent to `Message.client:waitComponent(Message, ...)`.
+---@param type? string|number
+---@param id? Custom-ID-Resolvable
+---@param timeout? number
+---@param predicate? function
+---@return boolean
+---@return ...
+function Message:waitComponent(type, id, timeout, predicate)
+  return self.client:waitComponent(self, type, id, timeout, predicate)
+end
+
+function get.components(self)
+  return self._components
 end
 
 --[=[@p reactions Cache An iterable cache of all reactions that exist for this message.]=]

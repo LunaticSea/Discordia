@@ -1,3 +1,13 @@
+# WARNING
+
+This is just a port from Bilal2453 library with some changes to work with Discordia (api v10). 
+I own nothing except changes on commit without co-authors. 
+Special thanks to [Bilal2453](https://github.com/Bilal2453) make all of these possible!
+
+Link repo:
+- [Bilal2453/discordia-components](https://github.com/Bilal2453/discordia-components)
+- [Bilal2453/discordia-interactions](https://github.com/Bilal2453/discordia-interactions)
+
 # Discordia
 
 **Discord API library written in Lua for the Luvit runtime environment**
