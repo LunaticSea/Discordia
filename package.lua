@@ -21,9 +21,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.]]
 
 return {
-	name = 'SinisterRectus/discordia',
-	version = '2.12.0',
-	homepage = 'https://github.com/SinisterRectus/Discordia',
+	name = 'RainyXeon/discordia',
+	version = '3.0.0-lunatic',
+	homepage = 'https://github.com/RainyXeon/Discordia',
 	dependencies = {
 		'creationix/coro-http@3.1.0',
 		'creationix/coro-websocket@3.1.0',
@@ -31,6 +31,6 @@ return {
 	},
 	tags = {'discord', 'api'},
 	license = 'MIT',
-	author = 'Sinister Rectus',
+	author = 'Sinister Rectus (ft. RainyXeon)',
 	files = {'**.lua'},
 }
