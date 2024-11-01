@@ -1,5 +1,9 @@
 local enums = require('enums')
 local json = require('json')
+local Interaction = require("containers/Interaction")
+local events = {
+	interaction_create_prelisteners = {}
+}
 
 local channelType = assert(enums.channelType)
 local insert = table.insert
@@ -537,6 +541,15 @@ function EventHandler.WEBHOOKS_UPDATE(d, client) -- webhook object is not provid
 	local channel = guild._text_channels:get(d.channel_id)
 	if not channel then return warning(client, 'TextChannel', d.channel_id, 'WEBHOOKS_UPDATE') end
 	return client:emit('webhooksUpdate', channel)
+end
+
+function EventHandler.INTERACTION_CREATE(d, client)
+
+  local interaction = Interaction(d, client)
+  for _, v in pairs(events.interaction_create_prelisteners) do
+    v(interaction, client)
+  end
+  return client:emit("interactionCreate", interaction)
 end
 
 function EventHandler.AUTO_MODERATION_RULE_CREATE(d, client)

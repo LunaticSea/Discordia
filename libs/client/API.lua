@@ -305,9 +305,9 @@ function API:deleteAllReactions(channel_id, message_id) -- Message:clearReaction
 	return self:request("DELETE", endpoint)
 end
 
-function API:editMessage(channel_id, message_id, payload) -- Message:_modify
+function API:editMessage(channel_id, message_id, payload, files) -- patch Discordia's to allow files field
 	local endpoint = f(endpoints.CHANNEL_MESSAGE, channel_id, message_id)
-	return self:request("PATCH", endpoint, payload)
+	return self:request("PATCH", endpoint, payload, nil, files)
 end
 
 function API:deleteMessage(channel_id, message_id) -- Message:delete
@@ -733,6 +733,31 @@ end
 function API:getCurrentApplicationInformation() -- Client:run
 	local endpoint = endpoints.OAUTH2_APPLICATION_ME
 	return self:request("GET", endpoint)
+end
+
+function API:createInteractionResponse(id, token, payload, files)
+  local endpoint = f(endpoints.INTERACTION_CALLBACK, id, token)
+  return self:request("POST", endpoint, payload, nil, files)
+end
+
+function API:createWebhookMessage(id, token, payload, files) -- same as executeWebhook but allows files
+	local endpoint = f(endpoints.INTERACTION_WEBHOOK, id, token)
+	return self:request("POST", endpoint, payload, nil, files)
+end
+
+function API:getWebhookMessage(id, token, msg_id)
+  local endpoint = f(endpoints.INTERACTION_MESSAGES, id, token, msg_id)
+  return self:request("GET", endpoint)
+end
+
+function API:deleteWebhookMessage(id, token, msg_id)
+  local endpoint = f(endpoints.INTERACTION_MESSAGES, id, token, msg_id)
+  return self:request("DELETE", endpoint)
+end
+
+function API:editWebhookMessage(id, token, msg_id, payload, files)
+  local endpoint = f(endpoints.INTERACTION_MESSAGES, id, token, msg_id)
+  return self:request("PATCH", endpoint, payload, nil, files)
 end
 
 -- end of auto-generated methods --

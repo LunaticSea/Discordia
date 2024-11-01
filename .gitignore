@@ -1,3 +1,5 @@
 docs
 tests
 deps/**
+discordia.log
+gateway.json
