@@ -59,8 +59,10 @@ end
 ---@return number
 local function findComponent(tbl, id)
   for i = 1, #tbl do
-    if tbl[i].id == id then return i end
+    if tbl[i].id == id and type(tbl[i].id) ~= "nil" and type(id) ~= "nil"
+    then return i end
   end
+  return false
 end
 
 ---<!ignore>
