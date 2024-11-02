@@ -9,12 +9,12 @@ local resolver = require("../resolver/components")
 local objComponents = resolver.objComponents
 
 local ArrayIterable = classes.ArrayIterable
-local SelectChannelMenu = require("../components/SelectChannelMenu")
-local SelectMentionMenu = require("../components/SelectMentionMenu")
-local SelectRoleMenu = require("../components/SelectRoleMenu")
-local SelectUserMenu = require("../components/SelectUserMenu")
-local SelectMenu = require("../components/SelectMenu")
-local Button = require("../components/Button")
+local SelectChannelMenu = require("./components/SelectChannelMenu")
+local SelectMentionMenu = require("./components/SelectMentionMenu")
+local SelectRoleMenu = require("./components/SelectRoleMenu")
+local SelectUserMenu = require("./components/SelectUserMenu")
+local SelectMenu = require("./components/SelectMenu")
+local Button = require("./components/Button")
 
 ---Represents a set of Component objects, offering an interface to control, modify, and retrieve Components easily.
 ---This is the entry point of this library and what this whole thing is about, that is, the builder.
