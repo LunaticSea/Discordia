@@ -1,10 +1,11 @@
 # WARNING
 
-This is just a port from Bilal2453 library with some changes to work with Discordia (api v10). 
-I own nothing except changes on commit without co-authors. 
+This is just a port from Bilal2453 library with some changes to work with Discordia (api v10).
+I own nothing except changes on commit without co-authors.
 Special thanks to [Bilal2453](https://github.com/Bilal2453) make all of these possible!
 
 Link repo:
+
 - [Bilal2453/discordia-components](https://github.com/Bilal2453/discordia-components)
 - [Bilal2453/discordia-interactions](https://github.com/Bilal2453/discordia-interactions)
 
@@ -37,13 +38,13 @@ local discordia = require('discordia')
 local client = discordia.Client()
 
 client:on('ready', function()
-	print('Logged in as '.. client.user.username)
+  print('Logged in as ' .. client.user.username)
 end)
 
 client:on('messageCreate', function(message)
-	if message.content == '!ping' then
-		message.channel:send('Pong!')
-	end
+  if message.content == '!ping' then
+    message.channel:send('Pong!')
+  end
 end)
 
 client:run('INSERT_TOKEN_HERE')
@@ -60,16 +61,21 @@ The earliest version of Discordia, before it even had that name, was released as
 ### FAQs
 
 Why Lua?
+
 - Lua is a lightweight scripting language that tends to be beginner-friendly, but powerful in the hands of an advanced user at the same time. Although Lua might not have the same popularity as that of other scripting languages such as Python or JavaScript, Lua's expandability makes it equally as capable as the others, while remaining easy-to-use and often more resource efficient.
 
 Why Luvit?
+
 - Luvit makes Lua web development an easy task on multiple platforms. Its [installation](https://luvit.io/install.html) process is (optionally) automated and uses pre-built [luvi cores](https://github.com/luvit/luvi/releases) when available. It also comes with many libraries essential to async I/O programming and networking. Compared to Node.js, Luvit [advertises](https://luvit.io/blog/luvit-reborn.html) similar speed, but reduced memory consumption. Compared to other Discord libraries, Discordia is expected to perform well due Luvit's use of LuaJIT, although it has not been benchmarked.
 
 Can I run this on a different Lua distribution?
+
 - The development and deployment of Discordia relies on the Luvit framework and its package manager. Porting Discordia and its dependencies to classic Lua or LuaJIT may be possible, but this is not a current project goal.
 
 How can I contribute?
+
 - Pull requests are welcomed, but please check with the library author before starting a major implementation. Contributions to the Wiki are helpful, too.
 
 Are there other Discord libraries?
+
 - Absolutely. Check the official [libraries](https://discord.com/developers/docs/topics/community-resources) page of the Discord API documentation or the unofficial Discord API server linked above.

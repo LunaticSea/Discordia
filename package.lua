@@ -29,8 +29,8 @@ return {
 		'creationix/coro-websocket@3.1.0',
 		'luvit/secure-socket@1.2.2',
 	},
-	tags = {'discord', 'api'},
+	tags = { 'discord', 'api' },
 	license = 'MIT',
 	author = 'Sinister Rectus, RainyXeon',
-	files = {'**.lua', '!tests'},
+	files = { '**.lua', '!tests' },
 }
