@@ -32,5 +32,5 @@ return {
 	tags = { 'discord', 'api' },
 	license = 'MIT',
 	author = 'Sinister Rectus, RainyXeon',
-	files = { '**.lua', '!tests' },
+	files = { '**.lua', '!tests', '!examples' },
 }

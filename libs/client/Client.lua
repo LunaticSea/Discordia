@@ -741,11 +741,10 @@ local function buildPredicate(msg, typ, id, predicate)
 	predicate = type(predicate) == 'function' and predicate or false
 	return function(inter, ...)
 		return -- interaction corresponds to message component?
-		(inter.type == interactionType.messageComponent) and -- interaction was on same targeted message?
-		(not msg or inter.message and inter.message.id == msg.id) and (not typ or typ == inter.data.component_type) and (not id or id == inter.data.custom_id) and (not predicate or predicate(
-		-- does component type match user provided one if any?
-		-- does component id match user provided one if any?
-		-- is user provided predicate satisfied if any?
+		(inter.type == interactionType.messageComponent) and (not msg or inter.message and inter.message.id == msg.id) and (not typ or typ == inter.data.component_type) and (not id or id == inter.data.custom_id) and (not predicate or predicate( -- interaction was on same targeted message?
+			-- does component type match user provided one if any?
+			-- does component id match user provided one if any?
+			-- is user provided predicate satisfied if any?
 			inter,
 			...
 		))

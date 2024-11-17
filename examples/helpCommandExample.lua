@@ -44,4 +44,5 @@ client:on('messageCreate', function(message)
 end)
 
 client:run('Bot BOT_TOKEN')
- -- replace BOT_TOKEN with your bot token
+
+-- replace BOT_TOKEN with your bot token
