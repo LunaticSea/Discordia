@@ -1024,6 +1024,11 @@ function API:getCurrentApplicationInformation() -- Client:run
 	return self:request('GET', endpoint)
 end
 
+function API:registerApplicationCommands(id, payload) -- Client:run
+	local endpoint = f(endpoints.APPLICATION_COMMANDS, id)
+	return self:request('PUT', endpoint, payload)
+end
+
 function API:createInteractionResponse(id, token, payload, files)
 	local endpoint = f(endpoints.INTERACTION_CALLBACK, id, token)
 	return self:request('POST', endpoint, payload, nil, files)
