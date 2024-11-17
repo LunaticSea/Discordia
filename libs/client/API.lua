@@ -1024,7 +1024,10 @@ function API:getCurrentApplicationInformation() -- Client:run
 	return self:request('GET', endpoint)
 end
 
-function API:registerApplicationCommands(id, payload) -- Client:run
+function API:registerApplicationCommands(
+id,
+	payload -- Client:run
+)
 	local endpoint = f(endpoints.APPLICATION_COMMANDS, id)
 	return self:request('PUT', endpoint, payload)
 end
