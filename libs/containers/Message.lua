@@ -110,6 +110,9 @@ function Message:_loadMore(data)
 	if data.sticker_items then
 		self._sticker_items = #data.sticker_items > 0 and data.sticker_items or nil
 	end
+	if data.components then
+	  self._components = data.components
+	end
 end
 
 function Message:_addReaction(d)

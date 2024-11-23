@@ -134,6 +134,10 @@ function Interaction:__init(data, parent)
 	-- Define Interaction state tracking
 	self._initialRes = false
 	self._deferred = false
+
+	if data.components then
+	  self._components = data.components
+	end
 end
 
 function Interaction:_sendMessage(payload, files, deferred)
@@ -426,6 +430,11 @@ end
 
 function getter:guildLocale()
 	return self._guild_locale
+end
+
+
+function get.components(self)
+  return self._components
 end
 
 return Interaction

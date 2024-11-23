@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.]]
 
 return {
-	name = 'RainyXeon/discordia',
+	name = 'LunaticSea/discordia',
 	version = '3.0.8',
 	homepage = 'https://github.com/LunaticSea/Discordia',
 	dependencies = {
