@@ -11,6 +11,7 @@ local Cache = require('iterables/Cache')
 local ArrayIterable = require('iterables/ArrayIterable')
 local Snowflake = require('containers/abstract/Snowflake')
 local Reaction = require('containers/Reaction')
+local Collector = require('containers/Collector')
 local Resolver = require('client/Resolver')
 local rawComponents = require('../resolver/components').rawComponents
 
@@ -192,7 +193,7 @@ end
 @t http
 @p content string
 @r boolean
-@d Sets the message's content. The message must be authored by the current user
+@d Sets the message content. The message must be authored by the current user
 (ie: you cannot change the content of messages sent by other users). The content
 must be from 1 to 2000 characters in length.
 ]=]
@@ -211,7 +212,7 @@ end
 @t http
 @p embed table
 @r boolean
-@d Sets the message's embed. The message must be authored by the current user.
+@d Sets the message embed. The message must be authored by the current user.
 (ie: you cannot change the embed of messages sent by other users).
 ]=]
 function Message:setEmbed(embed)
@@ -335,7 +336,7 @@ end
 @r boolean
 @d Removes a reaction from the message. Note that this does not return the old
 reaction object; wait for the `reactionRemove` event instead. If no user is
-indicated, then this will remove the current user's reaction.
+indicated, then this will remove the current user reaction.
 ]=]
 function Message:removeReaction(emoji, id)
 	emoji = Resolver.emoji(emoji)
@@ -398,51 +399,29 @@ function Message:reply(content)
 	return self._parent:send(content)
 end
 
----Sets the message's components.
----If `components` is false or nil, the message's components are removed.
----
----Returns `true` on success, otherwise `nil, err`.
----@param components? Components-Resolvable|boolean
----@return boolean
+--[=[
+@m setComponents
+@t http
+@p components table
+@r Message
+@d Set the component
+]=]
 function Message:setComponents(components)
 	components = components and rawComponents(components) or {}
 	return self:_modify{ components = components }
 end
 
----<!ignore>
----Similar to `Message:update(data)` except `data` is optional and mainly used to modify `components` field of a message.
----If `components` is false/nil, all components on that message will be removed.
----`data` may optionally be supplied to override other fields such as `content`, `embed`, etc.
----
----Returns the modified version of the Message.
----@param components? Components-Resolvable|boolean
----@param data? table
----@return Message
----@deprecated Use `Message:update()` instead.
-function Message:updateComponents(components, data)
-	self.client._deprecated('Message', 'updateComponents', 'update')
-	data = type(data) == 'table' and data or {}
-	if not components then
-		data.components = {}
-		return self:_modify(data)
-	end
-	assert(
-		components == true or type(components) == 'table',
-		'bad argument #1 to updateComponents (expected a Components|falsy value)'
-	)
-	data.components = rawComponents(components)
-	return self:_modify(data)
-end
-
----Equivalent to `Message.client:waitComponent(Message, ...)`.
----@param type? string|number
----@param id? Custom-ID-Resolvable
----@param timeout? number
----@param predicate? function
----@return boolean
----@return ...
-function Message:waitComponent(type, id, timeout, predicate)
-	return self.client:waitComponent(self, type, id, timeout, predicate)
+--[=[
+@m createCollector
+@t http
+@p type string/number
+@p timeout number
+@p filter function
+@r Collector
+@d Create components collector
+]=]
+function Message:createCollector(type, timeout, filter)
+  return Collector(self, type, timeout, filter)
 end
 
 function get.components(self)
@@ -474,7 +453,7 @@ end
 
 --[=[@p mentionedRoles ArrayIterable An iterable array of known roles that are mentioned in this message, excluding
 the default everyone role. The message must be in a guild text channel and the
-roles must be cached in that channel's guild for them to appear here.]=]
+roles must be cached in that channel guild for them to appear here.]=]
 function get.mentionedRoles(self)
 	if not self._mentioned_roles then
 		local client = self.client
