@@ -8,11 +8,10 @@ local setTimeout, clearTimeout = timer.setTimeout, timer.clearTimeout
 
 local Collector, get = class('Collector', Emitter)
 
-function Collector:__init(parent, type, timeout, filter, interaction_mode)
-  -- Emitter:__init(self)
+function Collector:__init(message, type, timeout, filter, interaction_mode)
   self._listeners = {}
-  self._parent = assert(parent, 'Missing Parent class')
-  self._client = parent.client
+  self._message = assert(message, 'Missing Parent class')
+  self._client = message.client
   self._type = assert(type, 'Missing component type') 
   self._timeout = timeout
   self._timeout_check = nil
@@ -25,12 +24,12 @@ end
 
 function Collector:_checkValid()
   assert(
-    #self._parent._components > 0,
+    #self._message._components > 0,
     'Cannot wait for components on a message that does not even contain any components'
 	)
 	if not self._inter_mode then
     assert(
-      self._parent.author.id == self._parent.client.user.id,
+      self._message.author.id == self._message.client.user.id,
       'Cannot wait for components on a message not owned by this bot client'
     )
 	end
@@ -66,13 +65,14 @@ end
 
 function Collector:stop()
   self._client:removeListener('interactionCreate', self._fn)
+  self:removeAllListeners()
   self:emit('end')
 end
 
 --[=[@p parent Container/Client The parent object of to which this container is
 a child. For example, the parent of a role is the guild in which the role exists.]=]
-function get.parent(self)
-	return self._parent
+function get.message(self)
+	return self._message
 end
 
 function get.type(self)
