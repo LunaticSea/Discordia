@@ -110,27 +110,10 @@ function Interaction:__init(data, parent)
 	end
 
 	-- Handle message
-	do
-		if not data.message then
-			goto skip
-		end
-		if self._channel then
-			self._message = self._channel._messages:_insert(data.message)
-		elseif data.message.channel then
-			local guild, cache = data.message.guild, nil
-			if guild then
-				guild = parent._guilds:_insert(guild)
-				cache = guild._text_channels:_insert(data.message.channel)
-			else
-				cache = parent._private_channels:_insert(data.message.channel)
-			end
-			self._message = cache and cache._messages:_insert(data.message)
-		end
-		if not self._message then
-			self._message = nil
-		end
-		::skip::
-	end
+  if data.message and self._channel then
+    local res = self._channel._messages:_insert(data.message)
+    self._message = res
+  end
 
 	-- Define Interaction state tracking
 	self._initialRes = false
@@ -290,7 +273,7 @@ function Interaction:_sendUpdate(payload, files)
 		self.id,
 		self._token,
 		{
-			type = payload and callbackType.updateMessage or callbackType.deferredUpdateMessage,
+			type = payload and callbackType.update or callbackType.deferUpdate,
 			data = payload,
 		},
 		files
