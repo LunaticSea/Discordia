@@ -418,7 +418,7 @@ end
 @t http
 @p username string
 @r boolean
-@d Sets the client's username. This must be between 2 and 32 characters in
+@d Sets the client is username. This must be between 2 and 32 characters in
 length. This does not change the application name.
 ]=]
 function Client:setUsername(username)
@@ -430,7 +430,7 @@ end
 @t http
 @p avatar Base64-Resolvable
 @r boolean
-@d Sets the client's avatar. To remove the avatar, pass an empty string or nil.
+@d Sets the client is avatar. To remove the avatar, pass an empty string or nil.
 This does not change the application image.
 ]=]
 function Client:setAvatar(avatar)
@@ -552,8 +552,8 @@ end
 @p id Channel-ID-Resolvable
 @r Channel
 @d Gets a channel object by ID. For guild channels, the current user must be in
-the channel's guild and the client must be running the appropriate shard that
-serves the channel's guild.
+the channel is guild and the client must be running the appropriate shard that
+serves the channel is guild.
 
 For private channels, the channel must have been previously opened and cached.
 If the channel is not cached, `User:getPrivateChannel` should be used instead.
@@ -575,8 +575,8 @@ end
 @t mem
 @p id Role-ID-Resolvable
 @r Role
-@d Gets a role object by ID. The current user must be in the role's guild and
-the client must be running the appropriate shard that serves the role's guild.
+@d Gets a role object by ID. The current user must be in the role is guild and
+the client must be running the appropriate shard that serves the role is guild.
 ]=]
 function Client:getRole(id)
 	id = Resolver.roleId(id)
@@ -589,8 +589,8 @@ end
 @t mem
 @p id Emoji-ID-Resolvable
 @r Emoji
-@d Gets an emoji object by ID. The current user must be in the emoji's guild and
-the client must be running the appropriate shard that serves the emoji's guild.
+@d Gets an emoji object by ID. The current user must be in the emoji is guild and
+the client must be running the appropriate shard that serves the emoji is guild.
 ]=]
 function Client:getEmoji(id)
 	id = Resolver.emojiId(id)
@@ -603,8 +603,8 @@ end
 @t mem
 @p id Sticker-ID-Resolvable
 @r Sticker
-@d Gets a sticker object by ID. The current user must be in the sticker's guild
-and the client must be running the appropriate shard that serves the sticker's guild.
+@d Gets a sticker object by ID. The current user must be in the sticker is guild
+and the client must be running the appropriate shard that serves the sticker is guild.
 ]=]
 function Client:getSticker(id)
 	id = Resolver.stickerId(id)
@@ -662,7 +662,7 @@ end
 @t ws
 @p status string/nil
 @r nil
-@d Sets the current user's status on all shards that are managed by this client.
+@d Sets the current user status on all shards that are managed by this client.
 See the `status` enumeration for acceptable status values.
 Passing `nil` removes previously set status.
 ]=]
@@ -691,7 +691,7 @@ end
 @t ws
 @p activity string/table/nil
 @r nil
-@d Sets the current user's activity on all shards that are managed by this client.
+@d Sets the current user activity on all shards that are managed by this client.
 If a string is passed, it is treated as the activity name. If a table is passed, it
 must have a `name` field and may optionally have a `url` or `type` field. Pass `nil` to
 remove the activity status.
@@ -727,10 +727,9 @@ end
 @t ws
 @p afk boolean/nil
 @r nil
-@d Set the current user's AFK status on all shards that are managed by this client.
+@d Set the current user AFK status on all shards that are managed by this client.
 This generally applies to user accounts and their push notifications.
-Passing `nil` removes AFK status.
-]=]
+--]=]
 function Client:setAFK(afk)
 	if type(afk) == 'boolean' then
 		self._presence.afk = afk
@@ -745,7 +744,11 @@ local function buildPredicate(msg, typ, id, predicate)
 	predicate = type(predicate) == 'function' and predicate or false
 	return function(inter, ...)
 		return -- interaction corresponds to message component?
-		(inter.type == interactionType.messageComponent) and (not msg or inter.message and inter.message.id == msg.id) and (not typ or typ == inter.data.component_type) and (not id or id == inter.data.custom_id) and (not predicate or predicate( -- interaction was on same targeted message?
+		(inter.type == interactionType.messageComponent) 
+      and (not msg or inter.message and inter.message.id == msg.id)
+      and (not typ or typ == inter.data.component_type)
+      and (not id or id == inter.data.custom_id)
+      and (not predicate or predicate( -- interaction was on same targeted message?
 			-- does component type match user provided one if any?
 			-- does component id match user provided one if any?
 			-- is user provided predicate satisfied if any?
@@ -753,41 +756,6 @@ local function buildPredicate(msg, typ, id, predicate)
 			...
 		))
 	end
-end
-
----@alias Custom-ID-Resolvable string
-
----Equivalent to `client:waitFor("interactionCreate", timeout, predicate)`
----except that it pre-provides a predicate for ease of use.
----If `msg` is provided, only interactionCreate event that reference this Message will pass.
----`type` is the type of the component interaction see componentType enumeration for acceptable values,
----if none specified any will match.
----`id` is the component custom_id, if none provided any id will match,
----`timeout` behave similar to waitFor's, so do `predicate`.
----@param msg? Message
----@param typ? string|number
----@param id? Custom-ID-Resolvable
----@param timeout? number
----@param predicate? function
----@return boolean
----@return ...
-function Client:waitComponent(msg, typ, id, timeout, predicate)
-	local componentType = enums.componentType
-	if msg then
-		assert(
-			#msg._components > 0,
-			'Cannot wait for components on a message that does not even contain any components'
-		)
-		assert(
-			msg.author == msg.client.user,
-			'Cannot wait for components on a message not owned by this bot client'
-		)
-	end
-
-	typ = type(typ) == 'number' and typ or componentType[typ]
-	predicate = buildPredicate(msg, typ, id, predicate)
-
-	return self:waitFor('interactionCreate', timeout, predicate)
 end
 
 --[=[@p shardCount number/nil The number of shards that this client is managing.]=]
@@ -856,6 +824,11 @@ end
 user-accounts should have these.]=]
 function get.relationships(self)
 	return self._relationships
+end
+
+
+function get.components(self)
+  return self._components
 end
 
 return Client

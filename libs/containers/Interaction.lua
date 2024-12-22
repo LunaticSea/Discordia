@@ -1,5 +1,6 @@
 local enums = require('enums')
 local resolver = require('../resolver/interaction')
+local Collector = require('containers/Collector')
 local rawComponents = require('../resolver/components').rawComponents
 local bit = require('bit')
 
@@ -109,31 +110,18 @@ function Interaction:__init(data, parent)
 	end
 
 	-- Handle message
-	do
-		if not data.message then
-			goto skip
-		end
-		if self._channel then
-			self._message = self._channel._messages:_insert(data.message)
-		elseif data.message.channel then
-			local guild, cache = data.message.guild, nil
-			if guild then
-				guild = parent._guilds:_insert(guild)
-				cache = guild._text_channels:_insert(data.message.channel)
-			else
-				cache = parent._private_channels:_insert(data.message.channel)
-			end
-			self._message = cache and cache._messages:_insert(data.message)
-		end
-		if not self._message then
-			self._message = nil
-		end
-		::skip::
-	end
+  if data.message and self._channel then
+    local res = self._channel._messages:_insert(data.message)
+    self._message = res
+  end
 
 	-- Define Interaction state tracking
 	self._initialRes = false
 	self._deferred = false
+
+	if data.components then
+	  self._components = data.components
+	end
 end
 
 function Interaction:_sendMessage(payload, files, deferred)
@@ -146,6 +134,9 @@ function Interaction:_sendMessage(payload, files, deferred)
 		},
 		files
 	)
+	if data.components then
+	  self._components = data.components
+	end
 	if data then
 		self._initialRes = true
 		self._deferred = deferred or false
@@ -158,6 +149,9 @@ end
 function Interaction:_sendFollowup(payload, files)
 	local data, err =
 		self._api:createWebhookMessage(self._application_id, self._token, payload, files)
+	if data.components then
+	  self._components = data.components
+	end
 	if data then
 		return self._channel and self._channel._messages:_insert(data) or true
 	else
@@ -195,26 +189,29 @@ function Interaction:reply(content, isEphemeral)
 	return method(self, msg, files)
 end
 
----Sets the interaction's components.
----If `components` is false or nil, the interaction's components are removed.
----
----Returns `true` on success, otherwise `nil, err`.
----@param components? Components-Resolvable|boolean
----@return boolean
+--[=[
+@m setComponents
+@t http
+@p components table
+@r Message
+@d Set the component
+]=]
 function Interaction:setComponents(components)
 	components = components and rawComponents(components) or {}
 	return self:_modify{ components = components }
 end
 
----Equivalent to `Message.client:waitComponent(Message, ...)`.
----@param type? string|number
----@param id? Custom-ID-Resolvable
----@param timeout? number
----@param predicate? function
----@return boolean
----@return ...
-function Interaction:waitComponent(type, id, timeout, predicate)
-	return self.client:waitComponent(self, type, id, timeout, predicate)
+--[=[
+@m createCollector
+@t http
+@p type string/number
+@p timeout number
+@p filter function
+@r Collector
+@d Create components collector
+]=]
+function Interaction:createCollector(type, timeout, filter)
+  return Collector(self, type, timeout, filter, true)
 end
 
 ---Sends a deferred interaction reply.
@@ -276,7 +273,7 @@ function Interaction:_sendUpdate(payload, files)
 		self.id,
 		self._token,
 		{
-			type = payload and callbackType.updateMessage or callbackType.deferredUpdateMessage,
+			type = payload and callbackType.update or callbackType.deferUpdate,
 			data = payload,
 		},
 		files
@@ -426,6 +423,11 @@ end
 
 function getter:guildLocale()
 	return self._guild_locale
+end
+
+
+function get.components(self)
+  return self._components
 end
 
 return Interaction

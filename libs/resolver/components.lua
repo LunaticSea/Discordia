@@ -48,8 +48,15 @@ function resolver.rawComponents(comp)
 			type = componentType.actionRow,
 			components = { comp:raw() },
 		} }
-	elseif #comp > 0 then
-		return comp -- Assume raw array of raw Action Rows
+	elseif #comp > 0 then	  
+	  local res = {}
+
+	  for _, s_comp in pairs(comp) do
+	    if s_comp.raw then table.insert(res, s_comp:raw()[1])
+	    else table.insert(res, s_comp) end
+	  end
+
+	  return res
 	end
 end
 
