@@ -434,4 +434,14 @@ enums.inputStyle = enum{
 	paragraph = 2,
 }
 
+enums.timestampStyle = enum {
+	shortTime      = 't',
+	longTime       = 'T',
+	shortDate      = 'd',
+	longDate       = 'D',
+	shortDateTime  = 'f',
+	longDateTime   = 'F',
+	relativeTime   = 'R',
+}
+
 return enums

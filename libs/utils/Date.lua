@@ -329,7 +329,7 @@ end
 @d Constructs a new Date object from the Discord timestamp format `<t:seconds:style>`.
 ]=]
 function Date.fromDiscordTimestamp(str)
-	return Date(Date.parseDiscordTimestamp(str))
+	return Date((Date.parseDiscordTimestamp(str)))
 end
 
 --[=[
