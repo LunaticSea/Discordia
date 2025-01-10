@@ -79,10 +79,6 @@ function get.type(self)
 	return self._type
 end
 
-function get.type(self)
-	return self._type
-end
-
 function get.timeout(self)
 	return self._timeout
 end
