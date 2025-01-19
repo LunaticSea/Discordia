@@ -739,25 +739,6 @@ function Client:setAFK(afk)
 	return updateStatus(self)
 end
 
-local function buildPredicate(msg, typ, id, predicate)
-	local interactionType = enums.interactionType
-	predicate = type(predicate) == 'function' and predicate or false
-	return function(inter, ...)
-		return -- interaction corresponds to message component?
-		(inter.type == interactionType.messageComponent) 
-      and (not msg or inter.message and inter.message.id == msg.id)
-      and (not typ or typ == inter.data.component_type)
-      and (not id or id == inter.data.custom_id)
-      and (not predicate or predicate( -- interaction was on same targeted message?
-			-- does component type match user provided one if any?
-			-- does component id match user provided one if any?
-			-- is user provided predicate satisfied if any?
-			inter,
-			...
-		))
-	end
-end
-
 --[=[@p shardCount number/nil The number of shards that this client is managing.]=]
 function get.shardCount(self)
 	return self._shard_count
