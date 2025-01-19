@@ -444,4 +444,14 @@ enums.timestampStyle = enum {
 	relativeTime   = 'R',
 }
 
+enums.timestampStyle = enum {
+	shortTime      = 't',
+	longTime       = 'T',
+	shortDate      = 'd',
+	longDate       = 'D',
+	shortDateTime  = 'f',
+	longDateTime   = 'F',
+	relativeTime   = 'R',
+}
+
 return enums

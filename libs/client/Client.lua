@@ -729,7 +729,7 @@ end
 @r nil
 @d Set the current user AFK status on all shards that are managed by this client.
 This generally applies to user accounts and their push notifications.
---]=]
+]=]
 function Client:setAFK(afk)
 	if type(afk) == 'boolean' then
 		self._presence.afk = afk
