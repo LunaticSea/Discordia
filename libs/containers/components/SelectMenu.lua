@@ -30,7 +30,7 @@ function SelectMenu:__init(data)
 	end
 
 	-- Base constructor initializing
-	Component.__init(self, data, componentType.selectMenu)
+	Component.__init(self, data, componentType.stringSelect)
 
 	-- Properly load rest of data
 	self:_load(data)
