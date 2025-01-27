@@ -332,7 +332,7 @@ end
 ---@return boolean
 function Interaction:autocomplete(choices)
 	assert(
-		self._type == intrType.applicationCommandAutocomplete,
+		self._type == intrType.autocomplete,
 		'APPLICATION_COMMAND_AUTOCOMPLETE is only supported by application-based commands!'
 	)
 	choices = resolver.autocomplete(choices)
@@ -342,7 +342,7 @@ function Interaction:autocomplete(choices)
 	end
 	assert(#choices < 26, 'choices must not exceeds 25 choice')
 	local data, err = self._api:createInteractionResponse(self.id, self._token, {
-		type = callbackType.applicationCommandAutocompleteResult,
+		type = callbackType.autocomplete,
 		data = { choices = choices },
 	})
 	if data then
