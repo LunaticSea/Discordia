@@ -63,10 +63,10 @@ function Collector:_setupTimeout()
 	end)
 end
 
-function Collector:stop()
+function Collector:stop(...)
   self._client:removeListener('interactionCreate', self._fn)
+  self:emit('end', ...)
   self:removeAllListeners()
-  self:emit('end')
 end
 
 --[=[@p parent Container/Client The parent object of to which this container is
